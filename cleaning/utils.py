@@ -18,50 +18,50 @@ MAX_RETRIES = 5
 BASE_DELAY = 0.3  # seconds
 
 
-def fetch_with_retry(path: str, params: Dict[str, Any] | None = None) -> requests.Response:
-    url = f"{BASE_URL}{path}"
-    for attempt in range(MAX_RETRIES):
-        try:
-            print(f"🔄 Attempt {attempt+1}/{MAX_RETRIES}: {url}")  # ✅ Debug log
-            resp = requests.get(url, headers=HEADERS, params=params, timeout=5)
-            print(f"📡 Status: {resp.status_code}")  # ✅ Debug log
+# def fetch_with_retry(path: str, params: Dict[str, Any] | None = None) -> requests.Response:
+#     url = f"{BASE_URL}{path}"
+#     for attempt in range(MAX_RETRIES):
+#         try:
+#             print(f"🔄 Attempt {attempt+1}/{MAX_RETRIES}: {url}")  # ✅ Debug log
+#             resp = requests.get(url, headers=HEADERS, params=params, timeout=5)
+#             print(f"📡 Status: {resp.status_code}")  # ✅ Debug log
             
-            # ✅ FIXED: DON'T raise immediately - only if NOT retriable
-            if resp.status_code not in RETRIABLE_STATUS:
-                resp.raise_for_status()
-                return resp
+#             # ✅ FIXED: DON'T raise immediately - only if NOT retriable
+#             if resp.status_code not in RETRIABLE_STATUS:
+#                 resp.raise_for_status()
+#                 return resp
             
-            print(f"🔄 Retriable {resp.status_code}, will retry...")
+#             print(f"🔄 Retriable {resp.status_code}, will retry...")
             
-        except Exception as e:
-            print(f"❌ Request failed: {e}")
+#         except Exception as e:
+#             print(f"❌ Request failed: {e}")
         
-        # ✅ Wait before next retry (except last attempt)
-        if attempt < MAX_RETRIES - 1:
-            delay = BASE_DELAY * (2 ** attempt)
-            print(f"⏳ Waiting {delay:.1f}s before retry...")
-            time.sleep(delay)
+#         # ✅ Wait before next retry (except last attempt)
+#         if attempt < MAX_RETRIES - 1:
+#             delay = BASE_DELAY * (2 ** attempt)
+#             print(f"⏳ Waiting {delay:.1f}s before retry...")
+#             time.sleep(delay)
     
-    # ✅ Final failure after all retries
-    raise Exception(f"All {MAX_RETRIES} attempts failed to {url}")
+#     # ✅ Final failure after all retries
+#     raise Exception(f"All {MAX_RETRIES} attempts failed to {url}")
 
 
 
-def post_with_retry(path: str, json_body: Dict[str, Any]) -> requests.Response:
-    url = f"{BASE_URL}{path}"
-    headers = {**HEADERS, "Content-Type": "application/json"}
-    for attempt in range(MAX_RETRIES):
-        try:
-            resp = requests.post(url, headers=headers, json=json_body, timeout=5)
-            if resp.status_code in RETRIABLE_STATUS:
-                raise requests.HTTPError(f"Retriable status {resp.status_code}")
-            resp.raise_for_status()
-            return resp
-        except Exception:
-            if attempt == MAX_RETRIES - 1:
-                raise
-            delay = BASE_DELAY * (2 ** attempt)
-            time.sleep(delay)
+# def post_with_retry(path: str, json_body: Dict[str, Any]) -> requests.Response:
+#     url = f"{BASE_URL}{path}"
+#     headers = {**HEADERS, "Content-Type": "application/json"}
+#     for attempt in range(MAX_RETRIES):
+#         try:
+#             resp = requests.post(url, headers=headers, json=json_body, timeout=5)
+#             if resp.status_code in RETRIABLE_STATUS:
+#                 raise requests.HTTPError(f"Retriable status {resp.status_code}")
+#             resp.raise_for_status()
+#             return resp
+#         except Exception:
+#             if attempt == MAX_RETRIES - 1:
+#                 raise
+#             delay = BASE_DELAY * (2 ** attempt)
+#             time.sleep(delay)
 
 
 # ===== Normalization rules from challenge =====

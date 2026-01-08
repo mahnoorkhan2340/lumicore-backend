@@ -15,9 +15,9 @@ Django REST API that fetches messy document data from LumiCore, normalizes it, a
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/fetch/?batch=1` | Fetch raw messy data |
+<!-- | `GET` | `/api/fetch/?batch=1` | Fetch raw messy data | -->
 | `POST` | `/api/normalize/` | Normalize raw → standard schema |
-| `POST` | `/api/submit/` | Submit cleaned data → get score |
+<!-- | `POST` | `/api/submit/` | Submit cleaned data → get score | -->
 
 ## Quick Start
 

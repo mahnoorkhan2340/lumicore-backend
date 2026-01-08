@@ -31,10 +31,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "core.urls"
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000", ]
 
 CORS_ALLOW_ALL_ORIGINS = True  # ← TEMP FOR TESTING (remove in production)
 CORS_ALLOW_CREDENTIALS = True

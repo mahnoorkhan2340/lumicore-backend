@@ -3,32 +3,30 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .utils import (
-    fetch_with_retry,
-    post_with_retry,
     normalize_record,
     is_valid,
     remove_duplicates,
 )
 
 
-@api_view(['GET'])
-def fetch_raw_data(request):
-    batch = request.query_params.get('batch', '1')
-    try:
-        resp = fetch_with_retry('/api/data', {'batch': batch})
-        raw_data = resp.json()
-        print(f"✅ LumiCore returned {len(raw_data)} records") 
-        return Response(raw_data, status=status.HTTP_200_OK)  # ← Return RAW array directly
-    except Exception as e:
-        print(f"❌ Backend error: {e}")
-        return Response({'error': str(e)}, status=status.HTTP_502_BAD_GATEWAY)
+# @api_view(['GET'])
+# def fetch_raw_data(request):
+#     batch = request.query_params.get('batch', '1')
+#     try:
+#         resp = fetch_with_retry('/api/data', {'batch': batch})
+#         raw_data = resp.json()
+#         print(f"✅ LumiCore returned {len(raw_data)} records") 
+#         return Response(raw_data, status=status.HTTP_200_OK)  # ← Return RAW array directly
+#     except Exception as e:
+#         print(f"❌ Backend error: {e}")
+#         return Response({'error': str(e)}, status=status.HTTP_502_BAD_GATEWAY)
 
 
 
 @api_view(["POST"])
 def normalize_data(request):
     """
-    POST /api/normalize/
+    POST api/normalize/
     Body: { "items": [ ...raw records from LumiCore... ] }
     Returns normalized items + validation and duplicate removal.
     """
