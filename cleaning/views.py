@@ -14,13 +14,13 @@ from .utils import (
 @api_view(['GET'])
 def fetch_raw_data(request):
     """
-    GET /api/data/?batch=1
+    GET /api/data?batch=1
     Fetches raw data from LumiCore /api/data endpoint.
     """
 
     batch = request.query_params.get('batch', '1')
     try:
-        resp = fetch_with_retry('/api/data?', params={'batch': batch})
+        resp = fetch_with_retry('/api/data', params={'batch': batch})
         raw_data = resp.json()
         return Response(raw_data, status=status.HTTP_200_OK)  
     except Exception as e:
