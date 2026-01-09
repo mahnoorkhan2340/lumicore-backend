@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from django.conf import settings
+
 from .utils import (
     fetch_with_retry,
     post_with_retry,
@@ -10,22 +10,24 @@ from .utils import (
     remove_duplicates,
 )
 
-@api_view(["GET"])
+
+@api_view(['GET'])
 def fetch_raw_data(request):
     """
-    api/data?batch=1 endpoint.
-    Fetch messy data from LumiCore API (batch query param allowed).
+    GET /api/data/?batch=1
+    Fetches raw data from LumiCore /api/data endpoint.
     """
-    batch = request.query_params.get("batch", "1")
+
+    batch = request.query_params.get('batch', '1')
     try:
-        resp = fetch_with_retry("/api/data", params={"batch": batch})
-        data = resp.json()
-        return Response({"raw": data}, status=status.HTTP_200_OK)
+        resp = fetch_with_retry('/api/data?', params={'batch': batch})
+        raw_data = resp.json()
+        return Response(raw_data, status=status.HTTP_200_OK)  
     except Exception as e:
-        return Response(
-            {"error": str(e)},
-            status=status.HTTP_502_BAD_GATEWAY,
-        )
+        print(f"❌ Backend error: {e}")
+        return Response({'error': str(e)}, status=status.HTTP_502_BAD_GATEWAY)
+
+
 
 @api_view(["POST"])
 def normalize_data(request):
@@ -53,11 +55,17 @@ def normalize_data(request):
         status=status.HTTP_200_OK,
     )
 
+
 @api_view(["POST"])
 def submit_cleaned_data(request):
     """
-    api/submit endpoint.
-    Submit cleaned items to LumiCore and return API response (including score).
+    POST /api/submit/
+    Body: {s
+      "candidate_name": "...",
+      "batch_id": "...",
+      "cleaned_items": [ ...normalized records... ]
+    }
+    Sends to LumiCore /api/submit and returns their response (score, etc.).
     """
     cleaned_items = request.data.get("cleaned_items", [])
     batch_id = request.data.get("batch_id", "1")
@@ -68,11 +76,13 @@ def submit_cleaned_data(request):
         "batch_id": batch_id,
         "cleaned_items": cleaned_items,
     }
+
     try:
         resp = post_with_retry("/api/submit", json_body=body)
-        return Response(resp.json(), status=status.HTTP_200_OK)
-    except Exception as e:
+        data = resp.json()
+        return Response(data, status=status.HTTP_200_OK)
+    except Exception as exc:
         return Response(
-            {"error": str(e)},
+            {"error": str(exc)},
             status=status.HTTP_502_BAD_GATEWAY,
         )

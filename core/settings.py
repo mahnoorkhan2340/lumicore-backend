@@ -31,6 +31,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "core.urls"
+APPEND_SLASH = False
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000", ]
 
 CORS_ALLOW_ALL_ORIGINS = True  # ← TEMP FOR TESTING (remove in production)
@@ -73,6 +74,5 @@ USE_TZ = True
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# === Challenge specific ===
 CANDIDATE_ID = os.getenv("CANDIDATE_ID", "candidate-mahnoor-pervaiz-2340")
 LUMICORE_BASE_URL = "https://fast-endpoint-production.up.railway.app"

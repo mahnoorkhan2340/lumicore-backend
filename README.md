@@ -22,13 +22,13 @@ This repository contains the backend for Lumicore built with Django. It provides
 
 **API Endpoints**
 
-- `POST /api/normalize/` — Normalize raw document payloads into the project's standard schema. Accepts JSON input (single object or array) and returns normalized JSON with deduplication/status information.
- - `POST /api/submit/` — Submit cleaned items to Lumicore for scoring. Accepts JSON with `candidate_name`, `batch_id`, and `cleaned_items`; returns the remote API response (including score/status).
+- `POST /api/normalize` — Normalize raw document payloads into the project's standard schema. Accepts JSON input (single object or array) and returns normalized JSON with deduplication/status information.
+ - `POST /api/submit` — Submit cleaned items to Lumicore for scoring. Accepts JSON with `candidate_name`, `batch_id`, and `cleaned_items`; returns the remote API response (including score/status).
 
-Example `POST /api/submit/` (curl):
+Example `POST /api/submit` (curl):
 
 ```bash
-curl -X POST http://127.0.0.1:8000/api/submit/ \
+curl -X POST http://127.0.0.1:8000/api/submit \
 	-H "Content-Type: application/json" \
 	-d '{
 		"candidate_name": "Your Name",
@@ -73,7 +73,7 @@ curl -X POST http://127.0.0.1:8000/api/submit/ \
 	python manage.py runserver
 	```
 
-Visit `http://127.0.0.1:8000/` to view the running app.
+Visit `http://127.0.0.1:8000` to view the running app.
 
 
 **Project structure (overview)**
